@@ -2,12 +2,33 @@
 
 node default {
   
-  host { 'puppet.lab.mikan.net':
+    host { 'puppet.lab.mikan.net':
     ensure       => 'present',
     host_aliases => ['puppet'],
     ip           => '192.168.33.10',
     target       => '/etc/hosts',
   }
+
+  host { 'dev1.lab.mikan.net':
+    ensure       => 'present',
+    host_aliases => ['dev1'],
+    ip           => '192.168.33.21',
+    target       => '/etc/hosts',
+  }
+
+  host { 'test1.lab.mikan.net':
+    ensure       => 'present',
+    host_aliases => ['test1'],
+    ip           => '192.168.33.31',
+    target       => '/etc/hosts',
+  }
+  host { 'prod1.lab.mikan.net':
+    ensure       => 'present',
+    host_aliases => ['prod1'],
+    ip           => '192.168.33.41',
+    target       => '/etc/hosts',
+  }
+
 
   
   package {'puppetmaster':
