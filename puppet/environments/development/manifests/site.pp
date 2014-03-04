@@ -8,5 +8,5 @@ node default inherits basenode {
 }
 
 node /dev/ inherits basenode  {
-  include "demowebb"
+  include "sample_component"
 }

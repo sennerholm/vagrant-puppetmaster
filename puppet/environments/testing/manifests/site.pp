@@ -7,6 +7,6 @@ node basenode {
 node default inherits basenode {    
 }
 
-node /dev/ inherits basenode  {
-  include "demowebb"
+node /test/ inherits basenode  {
+  include "sample_component"
 }
