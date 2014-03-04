@@ -1,0 +1,4 @@
+192.168.33.10	puppet.lab.mikan.net	puppet
+192.168.33.21	dev1.lab.mikan.net		dev1
+192.168.33.31	test1.lab.mikan.net		test1
+192.168.33.41	prod1.lab.mikan.net		prod1
