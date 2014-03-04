@@ -2,13 +2,14 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
+  # Supports local cache, don't wast bandwitdh
+  # vagrant plugin install vagrant-cachier
+  # https://github.com/fgrehm/vagrant-cachier 
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.auto_detect = true
+  end
+
   config.vm.define :master do |master_config|
-    # Supports local cache, don't wast bandwitdh
-    # vagrant plugin install vagrant-cachier
-    # https://github.com/fgrehm/vagrant-cachier 
-    if Vagrant.has_plugin?("vagrant-cachier")
-      config.cache.auto_detect = true
-    end
       # All Vagrant configuration is done here. The most common configuration
       # options are documented and commented below. For a complete reference,
       # please see the online documentation at vagrantup.com.
@@ -37,10 +38,81 @@ Vagrant.configure("2") do |config|
       # Enable the Puppet provisioner
       master_config.vm.provision :puppet, :module_path => "VagrantConf/modules", :manifests_path => "VagrantConf/manifests", :manifest_file  => "default.pp"
 
-    master_config.vm.synced_folder "puppet/manifests", "/etc/puppet/manifests"
-    master_config.vm.synced_folder "puppet/modules", "/etc/puppet/modules"
-    master_config.vm.synced_folder "puppet/hieradata", "/etc/puppet/hieradata"
+    master_config.vm.synced_folder "puppet/environments", "/etc/puppet/environments"
+#    master_config.vm.synced_folder "puppet/testing", "/etc/puppet/testing"
+#    master_config.vm.synced_folder "puppet/production", "/etc/puppet/production"
+#    master_config.vm.synced_folder "puppet/modules", "/etc/puppet/modules"
+ #   master_config.vm.synced_folder "puppet/manifests", "/etc/puppet/manifests"
+      master_config.vm.synced_folder "puppet/hieradata", "/etc/puppet/hieradata"
   end
-  
+
+  config.vm.define :dev1 do |cfg|
+    cfg.vm.box = "precise64"
+
+    cfg.vm.hostname = "dev1"
+
+    # Jenkins
+    # cfg.vm.network :forwarded_port, guest: 8080, host: 18080
+
+    # Artifactory
+    # cfg.vm.network :forwarded_port, guest: 8081, host: 18081
+
+    # Create a private network, which allows host-only access to the machine
+    # using a specific IP.
+    cfg.vm.network :private_network, ip: "192.168.33.21"
+
+    config.vm.provision :shell, :inline => "cp /vagrant/vm_files/vm_hosts /etc/hosts"
+
+    config.vm.provision "puppet_server" do |puppet|
+     puppet.options = "--verbose --environment development"
+#      puppet.puppet_server = "192.168.33.10"
+    end
+  end
+  config.vm.define :test1 do |cfg|
+    cfg.vm.box = "precise64"
+
+    cfg.vm.hostname = "test1"
+
+    # Jenkins
+    # cfg.vm.network :forwarded_port, guest: 8080, host: 18080
+
+    # Artifactory
+    # cfg.vm.network :forwarded_port, guest: 8081, host: 18081
+
+    # Create a private network, which allows host-only access to the machine
+    # using a specific IP.
+    cfg.vm.network :private_network, ip: "192.168.33.31"
+
+    config.vm.provision :shell, :inline => "cp /vagrant/vm_files/vm_hosts /etc/hosts"
+
+    config.vm.provision "puppet_server" do |puppet|
+     puppet.options = "--verbose --environment testing"
+#      puppet.puppet_server = "192.168.33.10"
+    end
+  end
+
+  config.vm.define :prod1 do |cfg|
+    cfg.vm.box = "precise64"
+
+    cfg.vm.hostname = "prod1"
+
+    # Jenkins
+    # cfg.vm.network :forwarded_port, guest: 8080, host: 18080
+
+    # Artifactory
+    # cfg.vm.network :forwarded_port, guest: 8081, host: 18081
+
+    # Create a private network, which allows host-only access to the machine
+    # using a specific IP.
+    cfg.vm.network :private_network, ip: "192.168.33.41"
+
+    config.vm.provision :shell, :inline => "cp /vagrant/vm_files/vm_hosts /etc/hosts"
+
+    config.vm.provision "puppet_server" do |puppet|
+     puppet.options = "--verbose --environment production"
+#      puppet.puppet_server = "192.168.33.10"
+    end
+  end
+
   
 end
