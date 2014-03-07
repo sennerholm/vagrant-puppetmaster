@@ -11,6 +11,10 @@ This is a Vagrantfile for running a testing setup for Puppet. It includes a Pupp
 
 If you get errors about PuppetDB not starting, issue a ``vagrant provision``.
 
+Expanded by Mikael Sennerholm to include multiple puppet environments, and 3 VMs, one in each environment.
+
+If you get errors about puppet SSL certificates on the puppet client VMs, issue a `vagrant provision {dev,test,prod}1`.
+
 ##Why?
 
 I wanted a full Puppet test environment that I could create and destroy easily. Vagrant gives me that.
